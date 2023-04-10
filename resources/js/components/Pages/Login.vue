@@ -1,11 +1,13 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { toast } from 'vue3-toastify';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { useRouter } from "vue-router";
 
+let router = useRouter();
 let active = ref(false);
 let loading = ref(false);
-let router = useRouter();
+const authStore = useAuthStore()
 
 let form = reactive({
   email: '',
@@ -17,8 +19,8 @@ const login = async() => {
   await axios.post('/api/login', form)
     .then(response => {
       if(response.data.success) {
-        localStorage.setItem('token', response.data.data.token);
-        router.push('/app/dashboard');
+        authStore.setToken(response.data.data.token)
+        router.push({ name : 'Dashboard' });
       } else {
         toast.error('Email or Password incorrect', {
           autoClose: 3000,

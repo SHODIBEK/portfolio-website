@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router"
+import { useAuthStore } from "../stores/useAuthStore"
 import AuthLayout from '@layouts/Auth.vue'
 import GuestLayout from '@layouts/Guest.vue'
 import ErrorLayout from '@layouts/Error.vue'
@@ -14,38 +15,48 @@ const baseURL = '/'
 
 const routes = [
     {
-        path: '/app',
-        name: 'Auth',
+        path: '/dashboard',
+        name: 'Dashboard',
         component: AuthLayout,
         children: [
             {
-                path: 'dashboard',
+                path: '',
                 name: 'Dashboard',
                 component: Dashboard,
             },
-        ]
+        ],
+        meta:{
+            requiresAuth: true
+        }
     },
     {
         path: '/',
         name: 'Guest',
         component: GuestLayout,
-        children: [
-            {
-                path: 'login',
-                name: 'Login',
-                component: Login,
-            },
-            {
-                path: 'register',
-                name: 'Register',
-                component: Register,
-            },
-            {
-                path: 'password',
-                name: 'Password',
-                component: Password,
-            },
-        ]
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: Login,
+        meta:{
+            requiresAuth: false
+        }
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: Register,
+        meta:{
+            requiresAuth: false
+        }
+    },
+    {
+        path: '/password',
+        name: 'Password',
+        component: Password,
+        meta:{
+            requiresAuth: false
+        }
     },
     {
         path: '/',
@@ -56,8 +67,11 @@ const routes = [
                 path: '404',
                 name: 'Error404',
                 component: Error404,
+                meta:{
+                    requiresAuth: false
+                }
             },
-        ]
+        ],
     },
     {
         path: '/:pathMatch(.*)*',
@@ -70,6 +84,17 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(baseURL),
     routes: routes
+})
+
+router.beforeEach((to,from) =>{
+    const store = useAuthStore();
+
+    if(to.meta.requiresAuth && store.getToken == 0){
+        return { name : 'Login'}
+    }
+    if(to.meta.requiresAuth == false && store.getToken != 0){
+        return { name : 'Dashboard'}
+    }
 })
 
 export default router
