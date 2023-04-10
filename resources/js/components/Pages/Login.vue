@@ -18,7 +18,7 @@ const login = async() => {
     .then(response => {
       if(response.data.success) {
         localStorage.setItem('token', response.data.data.token);
-        router.push('/admin/home');
+        router.push('/app/dashboard');
       } else {
         toast.error('Email or Password incorrect', {
           autoClose: 3000,
@@ -60,16 +60,8 @@ const login = async() => {
                         </button>
                       </div>
                   </div>
-                  <div class="flex items-center justify-between">
-                      <div class="flex items-start">
-                          <div class="flex items-center h-5">
-                            <input id="remember" aria-describedby="remember" type="checkbox" class="form-checkbox" required="">
-                          </div>
-                          <div class="ml-3 text-sm">
-                            <label for="remember" class="text-gray-500 dark:text-gray-300">Remember me</label>
-                          </div>
-                      </div>
-                      <a href="#" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
+                  <div>
+                    <router-link to="/password" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</router-link>
                   </div>
                   <button type="submit" class="form-button" :class="loading ? 'disabled:opacity-75' : ''" :disabled="loading">
                       <svg v-if="loading" aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -80,7 +72,7 @@ const login = async() => {
                       <span v-if="!loading">Sign in</span>
                   </button>
                   <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                      Don’t have an account yet? <router-link to="/registration" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</router-link>
+                      Don’t have an account yet? <router-link to="/register" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</router-link>
                   </p>
               </form>
           </div>
