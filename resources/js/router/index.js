@@ -1,9 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router"
 import { useAuthStore } from "../stores/useAuthStore"
-import AuthLayout from '@layouts/Auth.vue'
+
+// Layouts
+import DashboardLayout from '@layouts/Dashboard.vue'
 import GuestLayout from '@layouts/Guest.vue'
 import ErrorLayout from '@layouts/Error.vue'
 
+// Pages
 import Login from '@components/Pages/Login.vue'
 import Register from '@components/Pages/Register.vue'
 import Password from '@components/Pages/Password.vue'
@@ -17,7 +20,7 @@ const routes = [
     {
         path: '/dashboard',
         name: 'Dashboard',
-        component: AuthLayout,
+        component: DashboardLayout,
         children: [
             {
                 path: '',
