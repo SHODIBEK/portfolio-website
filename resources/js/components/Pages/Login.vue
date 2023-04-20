@@ -5,13 +5,13 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import useValidate from "@vuelidate/core";
 import { required, email } from "@vuelidate/validators";
 
-const authStore = useAuthStore();
-
 let active = ref(false);
 let form = reactive({
     email: "",
     password: "",
 });
+
+const authStore = useAuthStore();
 
 const rules = computed(() => ({
     email: { required, email },
@@ -113,7 +113,7 @@ const handleLogin = async () => {
                         </div>
                         <div>
                             <router-link
-                                to="/password"
+                                :to="{ name: 'ForgotPassword' }"
                                 class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                                 >Forgot password?</router-link
                             >

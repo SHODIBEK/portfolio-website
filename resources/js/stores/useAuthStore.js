@@ -66,5 +66,17 @@ export const useAuthStore = defineStore("auth", {
                     this.loading = false;
                 });
         },
+
+        async forgotPassword(email) {
+            try {
+                await axios.post("/api/forgot-password", email);
+            } catch (error) {
+                if (error.response.status === 422) {
+                    toast.error(
+                        "We can't find a user with that email address."
+                    );
+                }
+            }
+        },
     },
 });

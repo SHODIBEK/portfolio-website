@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -60,5 +62,23 @@ class AuthController extends Controller
     
             return response()->json($response, 200);
         }
+    }
+
+    public function passwordResetLink(Request $request) {
+        $request->validate([
+            'email' => ['required', 'email']
+        ]);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        if($status != Password::RESET_LINK_SENT) {
+            throw ValidationException::withMessages([
+                'email' => [__($status)]
+            ]);
+        }
+
+        return response()->json(['status' => __($status)]);
     }
 }

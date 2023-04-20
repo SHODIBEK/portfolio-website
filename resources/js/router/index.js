@@ -9,7 +9,7 @@ import ErrorLayout from "@layouts/Error.vue";
 // Pages
 import Login from "@components/Pages/Login.vue";
 import Register from "@components/Pages/Register.vue";
-import Password from "@components/Pages/Password.vue";
+import ForgotPassword from "@components/Pages/ForgotPassword.vue";
 import Dashboard from "@components/Pages/Dashboard.vue";
 import Error404 from "@components/Pages/Error404.vue";
 
@@ -53,9 +53,9 @@ const routes = [
         },
     },
     {
-        path: "/password",
-        name: "Password",
-        component: Password,
+        path: "/forgot-password",
+        name: "ForgotPassword",
+        component: ForgotPassword,
         meta: {
             requiresAuth: false,
         },
