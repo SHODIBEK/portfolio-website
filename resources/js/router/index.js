@@ -16,87 +16,87 @@ import Error404 from "@components/Pages/Error404.vue";
 const baseURL = "/";
 
 const routes = [
-    {
-        path: "/dashboard",
-        name: "Dashboard",
-        component: DashboardLayout,
-        children: [
-            {
-                path: "",
-                name: "DashboardIndex",
-                component: Dashboard,
-            },
-        ],
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: DashboardLayout,
+    children: [
+      {
+        path: "",
+        name: "DashboardIndex",
+        component: Dashboard,
+      },
+    ],
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/",
+    name: "Guest",
+    component: GuestLayout,
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register,
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
+    path: "/forgot-password",
+    name: "ForgotPassword",
+    component: ForgotPassword,
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
+    path: "/",
+    name: "Error",
+    component: ErrorLayout,
+    children: [
+      {
+        path: "404",
+        name: "Error404",
+        component: Error404,
         meta: {
-            requiresAuth: true,
+          requiresAuth: false,
         },
+      },
+    ],
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    beforeEnter: (to, from, next) => {
+      next({ name: "Error404" });
     },
-    {
-        path: "/",
-        name: "Guest",
-        component: GuestLayout,
-    },
-    {
-        path: "/login",
-        name: "Login",
-        component: Login,
-        meta: {
-            requiresAuth: false,
-        },
-    },
-    {
-        path: "/register",
-        name: "Register",
-        component: Register,
-        meta: {
-            requiresAuth: false,
-        },
-    },
-    {
-        path: "/forgot-password",
-        name: "ForgotPassword",
-        component: ForgotPassword,
-        meta: {
-            requiresAuth: false,
-        },
-    },
-    {
-        path: "/",
-        name: "Error",
-        component: ErrorLayout,
-        children: [
-            {
-                path: "404",
-                name: "Error404",
-                component: Error404,
-                meta: {
-                    requiresAuth: false,
-                },
-            },
-        ],
-    },
-    {
-        path: "/:pathMatch(.*)*",
-        beforeEnter: (to, from, next) => {
-            next({ name: "Error404" });
-        },
-    },
+  },
 ];
 
 const router = createRouter({
-    history: createWebHistory(baseURL),
-    routes: routes,
+  history: createWebHistory(baseURL),
+  routes: routes,
 });
 
 router.beforeEach(async (to, from) => {
-    const store = await useAuthStore();
+  const store = await useAuthStore();
 
-    if (to.meta.requiresAuth && store.stateToken == 0) {
-        return { name: "Login" };
-    }
-    if (to.meta.requiresAuth == false && store.stateToken != 0) {
-        return { name: "Dashboard" };
-    }
+  if (to.meta.requiresAuth && store.stateToken == 0) {
+    return { name: "Login" };
+  }
+  if (to.meta.requiresAuth == false && store.stateToken != 0) {
+    return { name: "Dashboard" };
+  }
 });
 
 export default router;

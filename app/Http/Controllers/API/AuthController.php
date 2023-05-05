@@ -12,7 +12,8 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         //validator
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -21,7 +22,7 @@ class AuthController extends Controller
             'confirmPassword' => 'required|same:password'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             $response = [
                 'success' => false,
                 'message' => $validator->errors()
@@ -46,39 +47,22 @@ class AuthController extends Controller
         return response()->json($response, 200);
     }
 
-    public function login(Request $request) {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+    public function login(Request $request)
+    {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             // $user = Auth::user();
             $user = $request->user();
 
             $success['token'] = $user->createToken('PortfolioApp')->plainTextToken;
             $success['name'] = $user->name;
-    
+
             $response = [
                 'success' => true,
                 'data' => $success,
                 'message' => 'User login successfully'
             ];
-    
+
             return response()->json($response, 200);
         }
-    }
-
-    public function passwordResetLink(Request $request) {
-        $request->validate([
-            'email' => ['required', 'email']
-        ]);
-
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
-
-        if($status != Password::RESET_LINK_SENT) {
-            throw ValidationException::withMessages([
-                'email' => [__($status)]
-            ]);
-        }
-
-        return response()->json(['status' => __($status)]);
     }
 }
