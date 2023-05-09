@@ -21,10 +21,6 @@ export const useAuthStore = defineStore("auth", {
       this.token = localStorage.getItem("token");
     },
 
-    removeToken() {
-      localStorage.removeItem("token");
-    },
-
     async getUser() {
       const data = await axios.get("/api/user");
       localStorage.setItem("user", JSON.stringify(data.data));
@@ -34,13 +30,14 @@ export const useAuthStore = defineStore("auth", {
 
     async login(data) {
       this.loading = true;
+
       await axios
         .post("/api/login", data)
         .then((response) => {
           if (response.data.success) {
             this.setToken(response.data.data.token);
             this.getUser();
-            this.router.push({ name: "Dashboard" });
+            this.router.push({ name: "DashboardIndex" });
           } else {
             toast.error("Email or Password incorrect");
           }
@@ -83,6 +80,34 @@ export const useAuthStore = defineStore("auth", {
         .finally(() => {
           this.loading = false;
         });
+    },
+
+    async resetPassword(data) {
+      this.loading = true;
+
+      await axios
+        .post("/api/reset-password", {
+          token: data.token,
+          email: data.email,
+          password: data.password,
+          password_confirmation: data.password_confirmation,
+        })
+        .then((response) => {
+          toast.success(response.data.success.message);
+          this.router.push({ name: "Login" });
+        })
+        .catch((errors) => {
+          toast.error(errors.response.data.error.message);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+
+    logout() {
+      this.token = "";
+      localStorage.removeItem("token");
+      this.router.push({ name: "Login" });
     },
   },
 });

@@ -1,3 +1,7 @@
+<script setup>
+  import Navigation from "@components/Dashboard/Navigation.vue";
+</script>
+
 <template>
-    <div>Dashboard 1</div>
+  <h1>Dashboard</h1>
 </template>

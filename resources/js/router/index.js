@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "../stores/useAuthStore";
 
 // Layouts
+import AuthLayout from "@layouts/Auth.vue";
 import DashboardLayout from "@layouts/Dashboard.vue";
 import GuestLayout from "@layouts/Guest.vue";
 import ErrorLayout from "@layouts/Error.vue";
@@ -10,6 +11,7 @@ import ErrorLayout from "@layouts/Error.vue";
 import Login from "@components/Pages/Login.vue";
 import Register from "@components/Pages/Register.vue";
 import ForgotPassword from "@components/Pages/ForgotPassword.vue";
+import ResetPassword from "@components/Pages/ResetPassword.vue";
 import Dashboard from "@components/Pages/Dashboard.vue";
 import Error404 from "@components/Pages/Error404.vue";
 
@@ -37,25 +39,31 @@ const routes = [
     component: GuestLayout,
   },
   {
-    path: "/login",
-    name: "Login",
-    component: Login,
-    meta: {
-      requiresAuth: false,
-    },
-  },
-  {
-    path: "/register",
-    name: "Register",
-    component: Register,
-    meta: {
-      requiresAuth: false,
-    },
-  },
-  {
-    path: "/forgot-password",
-    name: "ForgotPassword",
-    component: ForgotPassword,
+    path: "/auth",
+    name: "Auth",
+    component: AuthLayout,
+    children: [
+      {
+        path: "/login",
+        name: "Login",
+        component: Login,
+      },
+      {
+        path: "/register",
+        name: "Register",
+        component: Register,
+      },
+      {
+        path: "/forgot-password",
+        name: "ForgotPassword",
+        component: ForgotPassword,
+      },
+      {
+        path: "/reset-password/:token",
+        name: "ResetPassword",
+        component: ResetPassword,
+      },
+    ],
     meta: {
       requiresAuth: false,
     },
@@ -95,7 +103,7 @@ router.beforeEach(async (to, from) => {
     return { name: "Login" };
   }
   if (to.meta.requiresAuth == false && store.stateToken != 0) {
-    return { name: "Dashboard" };
+    return { name: "DashboardIndex" };
   }
 });
 
